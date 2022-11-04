@@ -1,0 +1,53 @@
+STRING REGION:
+string1:
+0x81e850a0 - 0xa1e850a0
+string2:
+0x81e85068 - 0xa1e85068
+
+flash start: 0xa1e80000
+
+
+
+
+STRLEN: 0xa1e874ac
+
+uart addr:
+0xb8001300, 16
+0xb8001600, 22
+0xb8018300, 24
+0xb8018600, 25
+
+
+0x81e96838
+uart_reg struct: 0xa1e96838
+                 0x81e96838
+clear:
+    start:       0x81e96bd8
+    end:         0x81e9cb30
+    
+
+preAppInit called from entrypoint:      0x81e93018
+
+reset vector     entry point       preAppInit      AppInit
+    0x0 --------> 0x00000490 ----> 0x00093018 ---->0x00085b58
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,75 @@
+stack pointer:
+000006f0 e9 81 08 3c     lui        t0,33257        
+000006f4 30 7b 08 25     addiu      t0,t0,31536
+000006f8 07 00 09 25     addiu      t1,t0,7       ; stack addr = 64800, 0xFD20
+
+000006fc f8 ff 01 24     li         at,-0x8
+00000700 24 40 21 01     and        t0,t1,at
+00000704 00 10 09 25     addiu      t1,t0,4096    ; stack size
+00000708 21 e8 20 01     move       sp,t1
+
+
+base addr:   0x0
+new base:    0x01E76CDC
+found print: 0x000105e4
+real print:  0x01e872c0
+
+
+# PACKET HEADER 19 bytes + data
+# [ 4  ][ 1  ][    1     ][  4  ][  1   ][ 4 ][ 4 ]   [LEN ][ 4 ]
+# [HEAD][TYPE][BLANK FLAG][INDEX][REPEAT][LEN][CRC]   [DATA][CRC]
+
+
+
+8732ad24
+88227d00
+
+80000000
+803fffff
+
+06bfb510
+0x1E76C9C
+
+
+firmware:
+APP  init!
+bl_panel_init!
+stb: 14 clock: 31 data: 9
+nec 16312 attach ok
+digit: 4 seg: 16 data_count: 8
+bl_flash_init!
+bl_verify_sw
+check_program!
+success!
+\0APP  init!
+bl_panel_init!
+stb: 14 clock: 31 data: 9
+nec 16312 attach ok
+digit: 4 seg: 16 data_count: 8
+bl_flash_init!
+bl_verify_sw
+check_program!
+success!
+\0APP  init!
+bl_panel_init!
+stb: 14 clock: 31 data: 9
+nec 16312 attach ok
+digit: 4 seg: 16 data_count: 8
+bl_flash_init!
+bl_verify_sw
+check_program!
+success!
+\0
+
+
+
+func_0x00e872c0
+       81010624
+
+
+
+0x8fc02abc
+
+0x8fc023e0
+0x8fc02299
+0x8fc018fc
