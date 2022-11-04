@@ -13,6 +13,7 @@ Direct SPI Flash:
 
 ## Features
 ### M3801
+[Info](M3801.md)
 - [X] UART
 - [X] Working newlib
 ## TODO
@@ -20,3 +21,7 @@ Direct SPI Flash:
 - [ ] UART on interrupt
 - [ ] GPIO Driver
 - [ ] Bootloader
+
+## References
+http://www.cs.cornell.edu/courses/cs3410/2012sp/MIPS_Vol3.pdf
+https://www.dsi.unive.it/~gasparetto/materials/MIPS_Instruction_Set.pdf
