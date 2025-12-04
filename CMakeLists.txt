@@ -37,6 +37,7 @@ add_executable(${PROJECT_NAME}
     sdk/src/start.S
     sdk/src/print.c
     sdk/src/uart.c
+    sdk/src/gpio.c
     user/src/main.c
     sdk/src/entry.c
     sdk/src/fpu.c

@@ -5,6 +5,7 @@
 #include <regs.h>
 #include <mipsregs.h>
 #include <print.h>
+#include <gpio.h>
 
 // sample user program
 
@@ -15,11 +16,11 @@ extern uint32_t _heap_start;
 extern uint32_t _heap_end;
 
 void print_addr(void) {
-    kprintf("stack end: %x\n", &_sstack);
-    kprintf("stack start: %x\n", &_estack);
+    kprintf("stack end: %x\n\r", &_sstack);
+    kprintf("stack start: %x\n\r", &_estack);
 
-    kprintf("heap start: %x\n", &_heap_start);
-    kprintf("heap end: %x\n", &_heap_end);
+    kprintf("heap start: %x\n\r", &_heap_start);
+    kprintf("heap end: %x\n\r", &_heap_end);
 }
 
 int readline(char *buf, int len) {
@@ -50,7 +51,7 @@ typedef struct Cmd {
 
 // ping
 void cmd_f(void) {
-    kprintf("cmd ok\n");
+    kprintf("cmd ok\n\r");
 }
 
 // write data to ram
@@ -59,12 +60,12 @@ void write_f(void) {
     fflush(stdout);
     readline(line, 100);
     uint32_t len = strtoul(line, NULL, 0);
-    kprintf("waiting for data: %d\n", len);
+    kprintf("waiting for data: %d\n\r", len);
     char volatile *target = (char *)0x83000000;
     for (uint32_t i = 0; i < len; i++) {
         target[i] = uart_read_char(0);
     }
-    kprintf("written\n");
+    kprintf("written\n\r");
 }
 
 // execute program at address
@@ -77,7 +78,7 @@ void jump_f(void) {
     fflush(stdout);
     int len = readline(line, 100);
     if (line[0] == 'y' && len == 1) {
-        kprintf("jump\n");
+        kprintf("jump\n\r");
         exec(addr);
     }
 }
@@ -99,10 +100,10 @@ void dump_f(void) {
 
     int confirm_len = readline(line, 100);
     if (line[0] == 'y' && confirm_len == 1) {
-        kprintf("dump\n");
+        kprintf("dump\n\r");
         uint32_t volatile *target = (uint32_t *)addr;
         for (uint32_t i = 0; i < len; i++) {
-            kprintf("%a: %a\n", addr + (4*i), target[i]);
+            kprintf("%a: %a\n\r", addr + (4*i), target[i]);
         }
     }
 }
@@ -111,17 +112,17 @@ void dump_f(void) {
 // interrupt tester
 void test_f(void) {
     uint32_t addr = 0x81000000;
-    kprintf("%u\n", addr);
-    kprintf("%a\n", addr);
+    kprintf("%u\n\r", addr);
+    kprintf("%a\n\r", addr);
     c0_clrbits(CP0_STATUS, ST0_BEV | ST0_EXL | ST0_ERL);
     c0_setbits(CP0_STATUS, 0xff00); // enable all interrupts
     c0_setbits(CP0_STATUS, ST0_IE);
-    kprintf("OK\n");
+    kprintf("OK\n\r");
 
 }
 
 void run_f(void) {
-    kprintf("load from ram\n");
+    kprintf("load from ram\n\r");
     exec(0x83000000);
 }
 
@@ -136,27 +137,47 @@ Cmd cmd[] = {
 
 int main(void) {
 
-    kprintf("Main function\n");
+    kprintf("Main function\n\r");
 
     print_addr();
 
     int cause = read_32bit_cause_register();
-    kprintf("cause: %x\n", cause);
+    kprintf("cause: %x\n\r", cause);
 
     double x = 1.23;
     double y = 1.25;
 
-    kprintf("x: %f y: %f\n", x, y);
+    kprintf("x: %f y: %f\n\r", x, y);
 
     for (int i = 0; i < 10; i++) {
         x += y + 1.2;
     }
 
-    kprintf("result: %f\n", x);
+    kprintf("result: %f\n\r", x);
 
     cause = read_32bit_cause_register();
-    kprintf("cause: %x\n", cause);
+    kprintf("cause: %x\n\r", cause);
 
+	if(1) {
+		// GPIO test
+		// I test it by randomly shorting random GPIOs to ground,
+		// I can cleary see that at least some of them react
+		// all in reproducible manner
+		for(int i = 0; i < GPIO_PORT_MAX; i++) {
+			gpio_direction_input(i);
+		}
+		while(1) {
+			for(int i = 0; i < GPIO_PORT_MAX; i+=8) {
+				int x = 0;
+				for(int j = 0; j < 8; j++) {
+					int val = gpio_get_value(i + j);
+					if(val) x |= (1 << j);
+				}
+				kprintf("%x ", x);
+			}
+			kprintf("\n\r");
+		}
+	}
 
     // command loop
     while (1) {
