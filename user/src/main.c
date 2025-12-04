@@ -160,7 +160,9 @@ int main(void) {
 
 	if(1) {
 		// GPIO test
-		// I test it by randomly shorting random GPIOs to ground,
+		// My two buttons on board are working 
+		// (it has no i2c-like display, no display at all)
+		// I also test it by randomly shorting random GPIOs to ground,
 		// I can cleary see that at least some of them react
 		// all in reproducible manner
 		for(int i = 0; i < GPIO_PORT_MAX; i++) {
