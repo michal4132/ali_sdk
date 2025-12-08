@@ -3,4 +3,4 @@
 build/
 priv/
 crosstool-ng/
-.bak
+*.bak
