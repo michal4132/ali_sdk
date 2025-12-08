@@ -2,3 +2,5 @@
 .config.old
 build/
 priv/
+crosstool-ng/
+.bak
