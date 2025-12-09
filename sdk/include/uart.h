@@ -32,6 +32,7 @@
 int32_t uart_attach(uint32_t dev_num);
 void uart_set_mode(uint32_t id, uint32_t bps, int parity);
 uint8_t uart_read_char(uint32_t id);
+int uart_poll_char(uint32_t id);
 void uart_write_char(uint32_t id, uint8_t ch);
 
 #endif // _UART_H_

@@ -21,7 +21,7 @@ SECTIONS
 {
     . = BASE_ADDR;
 
-    .text :{
+    .text : {
         _stext = .;
         *(.text .text.*)
         *(.rodata .rodata.*)
@@ -32,19 +32,18 @@ SECTIONS
     .vector : {
         _svector = VECTOR_ADDR;
         *(.vector .vector.*)
-        _evector = .; 
+        _evector = .;
+    } > rom
+
+    .data : {
+        _sdata = .;
+        *(.data .data.*)
+        *(.sdata .sdata.*)
+        . = ALIGN(4);
+        _edata = .;
     } > ram AT> rom
 
-   .data :
-   {
-      _sdata = .;
-      *(.data .data.*)
-      *(.sdata .sdata.*)
-      . = ALIGN(4);
-      _edata = .;
-   } > ram AT> rom
-
-   _etext = LOADADDR(.data);
+    _etext = LOADADDR(.data);
 
     .bss (NOLOAD) : {
         _sbss = .;
@@ -64,7 +63,7 @@ SECTIONS
         _heap_end = .;
     } > ram
 
-    .stack STACK_ADDR (NOLOAD): {
+    .stack STACK_ADDR (NOLOAD) : {
         . = ALIGN(8);
         _sstack = .;
         . = . + STACK_SIZE;

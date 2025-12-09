@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(ali_sdk C)
 
-
 option(LOAD_TO_RAM "Load firmware to RAM using UART" OFF)
 if(LOAD_TO_RAM)
     set(LINKER_SCRIPT "ld/ali_m3801_ram.ld")
@@ -14,15 +13,15 @@ set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR mips32)
 set(CMAKE_CROSSCOMPILING 1)
 
-
 set(CMAKE_C_COMPILER        mipsel-unknown-elf-gcc)
 set(CMAKE_CXX_COMPILER      mipsel-unknown-elf-g++)
 set(CMAKE_LINKER            mipsel-unknown-elf-ld)
 set(CMAKE_OBJCOPY           mipsel-unknown-elf-objcopy)
 
-set(CMAKE_C_FLAGS "-mips32r5 -mdouble-float -mno-gpopt -mno-mips16 -Wall -Wformat -nostdlib")
+# Add -g for debug symbols and -O0 to prevent optimization
+set(CMAKE_C_FLAGS "-g -O0 -mips32r5 -mdouble-float -mno-gpopt -mno-mips16 -Wall -Wformat -nostdlib")
 set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
-set(CMAKE_EXE_LINKER_FLAGS "-mips32r5 -mdouble-float -mno-mips16 -Wl,-Map=output.map -EL ${CMAKE_EXE_LINKER_FLAGS} -T ${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT}")
+set(CMAKE_EXE_LINKER_FLAGS "-g -O0 -mips32r5 -mdouble-float -mno-mips16 -Wl,-Map=output.map -EL ${CMAKE_EXE_LINKER_FLAGS} -T ${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT}")
 
 # hack to compile assembly with gcc
 set(ASM_SRCS sdk/src/start.S)
@@ -37,11 +36,13 @@ add_executable(${PROJECT_NAME}
     sdk/src/start.S
     sdk/src/print.c
     sdk/src/uart.c
+    sdk/src/gpio.c
+    sdk/src/chip.c
     user/src/main.c
     sdk/src/entry.c
     sdk/src/fpu.c
 )
-target_link_libraries(${PROJECT_NAME} m c gcc syscalls)
+target_link_libraries(${PROJECT_NAME} m c gcc syscalls )
 
 # make binary from elf
 add_custom_command(
