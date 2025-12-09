@@ -1,3 +1,27 @@
+
+/*
+https://github.com/zhe2lucifer/linux-kernel-zh/tree/8fb05a60b37d48a9f2f5b95d9452fd3f081e82a2/drivers/alidrivers/modules/aliarch/mips/ali/m36
+https://github.com/zhe2lucifer/linux-kernel-zh/blob/8fb05a60b37d48a9f2f5b95d9452fd3f081e82a2/drivers/alidrivers/modules/aliarch/mips/ali/m36/m36_irq.c
+https://github.com/BlazingRockStorm/MISP-assembly-of-HEDSPI/blob/1870628884339a3712cdceba3e15a0187928adc7/bai1.asm#L597
+
+https://sourceforge.net/projects/spimsimulator/files/
+
+https://github.com/zhe2lucifer/linux-kernel-zh/blob/6.8.3.2-dev/arch/mips/kernel/irq_cpu.c#L101
+
+https://github.com/qttest1/PDK_GoBian/blob/a30991e179d2544f73bc05f8dceaec6bb17b7b4d/pdk/linux/kernel/alidrivers/modules/alisoc/chip.S
+
+https://github.com/qttest1/PDK_GoBian/blob/a30991e179d2544f73bc05f8dceaec6bb17b7b4d/pdk/linux/kernel/alidrivers/modules/aliwatchdog/dog_m33.c
+
+https://raw.githubusercontent.com/qttest1/PDK_GoBian/a30991e179d2544f73bc05f8dceaec6bb17b7b4d/pdk/linux/kernel/alidrivers/include/ali_interrupt.h
+
+0xdead1bee 0xdead2bee 0xdead3bee
+
+#if (defined(CONFIG_ALI_M3701G) || defined(CONFIG_ALI_M3701C))
+
+
+*/
+
+
 #include "uart.h"
 #include <stddef.h>
 #include <stdlib.h>
@@ -117,6 +141,16 @@ void uart_set_mode(uint32_t id, uint32_t bps, int parity) {
 }
 
 // TODO(michal4132): implement id
+// https://github.com/zhe2lucifer/linux-kernel-zh/blob/8fb05a60b37d48a9f2f5b95d9452fd3f081e82a2/drivers/tty/serial/ali_uart.c#L78
+
+int uart_poll_char(uint32_t id) {
+    uint8_t istatus;
+    if (SCI_READ8(0, SCI_16550_ULSR) & 1) {
+        return SCI_READ8(0, SCI_16550_URBR);
+    }
+	return -1;
+}
+
 uint8_t uart_read_char(uint32_t id) {
     uint8_t istatus;
     while (1) {
@@ -124,7 +158,7 @@ uint8_t uart_read_char(uint32_t id) {
             switch (istatus) {
             case 0x06:  // LSR error: OE, PE, FE, or BI
                 if (SCI_READ8(0, SCI_16550_ULSR) & 0x9e) {
-                    kprintf("sci_16550uart_interrupt: lstatus error!\n");
+                    //kprintf("sci_16550uart_interrupt: lstatus error!\n");
                 }
                 // We continue receive data at this condition
             case 0x0c:  // Character Timer-outIndication

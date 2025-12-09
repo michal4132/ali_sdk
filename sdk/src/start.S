@@ -146,3 +146,45 @@ _start:
 	nop
 
 .end _start
+
+.section .vector, "ax"
+.align 7       # 128-byte aligned for MIPS exceptions
+.globl _irq_vector
+_irq_vector:
+    la      t0, irq_handler
+    jr      t0
+    nop
+
+.globl irq_handler
+.ent irq_handler
+irq_handler:
+    addiu sp, sp, -40
+    sw    t0, 0(sp)
+    sw    t1, 4(sp)
+    sw    t2, 8(sp)
+    sw    t3, 12(sp)
+    sw    t4, 16(sp)
+    sw    t5, 20(sp)
+    sw    t6, 24(sp)
+    sw    t7, 28(sp)
+    sw    t8, 32(sp)
+    sw    t9, 36(sp)
+
+    la      t0, c_irq_handler
+    jalr    t0
+    nop
+
+    lw      t0, 0(sp)
+    lw      t1, 4(sp)
+    lw      t2, 8(sp)
+    lw      t3, 12(sp)
+    lw      t4, 16(sp)
+    lw      t5, 20(sp)
+    lw      t6, 24(sp)
+    lw      t7, 28(sp)
+    lw      t8, 32(sp)
+    lw      t9, 36(sp)
+    addiu   sp, sp, 40
+
+    eret
+.end irq_handler

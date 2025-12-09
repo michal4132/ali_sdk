@@ -50,7 +50,7 @@ void entrypoint(void) {
     }
 
     uart_attach(1);
-    uart_set_mode(0, 115200, 1);
+    uart_set_mode(0, 115200, 0);
     kprintf("\nBooting...\n");
 
     // c0_clrbits(CP0_STATUS, ST0_BEV | ST0_EXL | ST0_ERL);
